@@ -28,7 +28,7 @@ Right now, this repo implements the Retrieval + Context part of RAG. The final G
 ## Project Structure
 
 - `rag.ipynb` : main notebook (ingestion + indexing + retrieval)
-- `main.py` : placeholder entry (optional)
+- `main.py` : optional/placeholder entry
 - `pyproject.toml`, `uv.lock` : `uv` project configuration
 - `requirements.txt` : optional reference list
 - `.env.example` : environment variable template (do not commit `.env`)
@@ -41,3 +41,55 @@ Right now, this repo implements the Retrieval + Context part of RAG. The final G
 uv venv
 source .venv/bin/activate
 uv sync
+```
+
+### 2) Configure environment variables
+
+Create a `.env` file in the project root (this file is gitignored):
+
+```bash
+MONGODB_URI="mongodb+srv://<username>:<password>@<cluster>.mongodb.net/?retryWrites=true&w=majority"
+```
+
+Tip: Copy `.env.example` and fill in your values.
+
+### 3) Atlas prerequisites
+
+In MongoDB Atlas:
+1. Create a new Project + free M0 cluster
+2. Create a DB user with readWrite access
+3. Add your IP to Network Access (IP Access List)
+4. Ensure Vector Search is available for your cluster
+5. Copy the connection string from **Connect -> Drivers** and paste it into `.env`
+
+### 4) Run the notebook
+
+Open `rag.ipynb` and run cells top-to-bottom.
+
+The notebook will:
+- download the PDF
+- chunk + embed
+- insert into MongoDB
+- create the Atlas Vector Search index
+- run retrieval queries
+
+## Notes / Common Issues
+
+- Vector index dimensions must match your embedding model dimension.
+  - `BAAI/bge-small-en-v1.5` -> 384 dims
+- `numCandidates` in `$vectorSearch` is NOT the embedding dimension.
+  - Typical values: 50–200 (start with 100)
+- If MongoDB connection fails:
+  - check `.env` is loaded
+  - confirm IP allowlist and DB user/password in Atlas
+  - verify your `MONGODB_URI` starts with `mongodb+srv://`
+
+## Next Step: add Generation 
+
+This repo currently builds retrieval context. To complete full RAG, add a local LLM (free) such as Ollama and pass the retrieved `context_string` into the model prompt.
+
+## License
+
+MIT (or replace with your preferred license)
+
+
