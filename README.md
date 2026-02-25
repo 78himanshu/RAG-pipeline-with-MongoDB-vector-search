@@ -41,11 +41,3 @@ Right now, this repo implements the Retrieval + Context part of RAG. The final G
 uv venv
 source .venv/bin/activate
 uv sync
-
-### 2) Configure environment variables
-
-Create a `.env` file in the project root (this file is gitignored):
-
-```bash
-MONGODB_URI="mongodb+srv://<username>:<password>@<cluster>.mongodb.net/?retryWrites=true&w=majority"
-
